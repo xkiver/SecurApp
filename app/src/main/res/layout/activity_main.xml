@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    >
+    android:background="@mipmap/wallpaper1">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,55 +17,83 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Necesito el ascensor, me encuentro en:"
+        android:textSize="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/twAscensor"
+        android:background="#CCF0F8FF"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnConection"
-        android:text="Conectar"/>
+        android:id="@+id/btnAscensor1"
+        android:text="Primer piso"
+        android:layout_below="@+id/twAscensor"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="21dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnPorton"
+        android:text="Porton"
+        android:layout_above="@+id/twAscensor"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="11dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnPuerta"
         android:text="Puerta"
-        />
+        android:layout_above="@+id/btnPorton"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnPorton"
-        android:text="Porton"/>
+        android:id="@+id/btnConection"
+        android:text="Conectar"
+        android:layout_below="@+id/textViewEstado"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="24dp" />
 
     <TextView
+        android:text="Deseo abrir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ascensor"
+        android:id="@+id/textViewBtn"
         android:textSize="15dp"
+        android:textColor="@color/colorPrimary"
+        android:background="#CCF0F8FF"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"
-        android:textColor="@color/colorPrimary"
-        android:id="@+id/twAscensor"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnAscensor1"
-        android:text="Piso 1"/>
+        android:layout_alignBaseline="@+id/btnConection"
+        android:layout_alignBottom="@+id/btnConection"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnAscensor2"
-        android:text="Piso 2"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnAscensor3"
-        android:text="Piso 3"/>
+        android:text="Mi piso"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/btnAscensor1"
+        android:layout_alignParentStart="true" />
 
 
-</LinearLayout>
+</RelativeLayout>

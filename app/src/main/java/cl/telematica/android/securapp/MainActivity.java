@@ -5,18 +5,28 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+
+import static cl.telematica.android.securapp.R.menu.configmenu;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
     BluetoothDevice mBluetoothDevice = null;
     BluetoothSocket mBluetoothSocket = null;
 
-    Button btnConexion, btnPuerta, btnPorton, btnAscensor1, btnAscensor2, btnAscensor3;
-    TextView textViewEstado, tvAscensor;
+    Button btnConexion, btnPuerta, btnPorton, btnAscensor1, btnAscensor2;
+    TextView textViewEstado, tvAscensor, textViewBtn;
 
     final byte delimiter = 33; //signo ! en tabla ascii
     int readBufferPosition = 0;
@@ -55,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
         btnAscensor1.setVisibility(View.INVISIBLE);
         btnAscensor2 = (Button)findViewById(R.id.btnAscensor2);
         btnAscensor2.setVisibility(View.INVISIBLE);
-        btnAscensor3 = (Button)findViewById(R.id.btnAscensor3);
-        btnAscensor3.setVisibility(View.INVISIBLE);
         textViewEstado = (TextView)findViewById(R.id.textViewEstado);
         tvAscensor= (TextView)findViewById(R.id.twAscensor);
         tvAscensor.setVisibility(View.INVISIBLE);
+        textViewBtn= (TextView)findViewById(R.id.textViewBtn);
+        textViewBtn.setVisibility(View.INVISIBLE);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -74,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         btnConexion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
 
                 if(conexion){
                     //desconectar
@@ -102,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             private String btMsg;
 
             public workerThread(String msg){ btMsg = msg;}
+
 
             @Override
             public void run() {
@@ -173,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 (new Thread(new workerThread("puerta"))).start();
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.puerta);
+                mp.start();
             }
         });
 
@@ -181,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 (new Thread(new workerThread("porton"))).start();
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.auto);
+                mp.start();
             }
         });
 
@@ -189,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 (new Thread(new workerThread("piso1"))).start();
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.piso1);
+                mp.start();
             }
         });
 
@@ -196,18 +216,36 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                (new Thread(new workerThread("piso2"))).start();
+                (new Thread(new workerThread("mipiso"))).start();
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.ascensor);
+                mp.start();
             }
         });
 
-        btnAscensor3.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View v) {
-                (new Thread(new workerThread("piso3"))).start();
-            }
-        });
 
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.configmenu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.config){
+            // Agregar una nueva activity para mostart con Intent
+        }else if (id == R.id.nos){
+            // Agregar una nueva activity con intent
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -226,12 +264,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case SOLICITA_CONEXION:
+
                 if(resultCode == Activity.RESULT_OK){
                     MAC = data.getExtras().getString(ListaDispositivos.DIRECCION_MAC);
                     mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(MAC);
 
                     try {
-
+                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.conectando);
+                        mp.start();
                         mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(mUUID);
                         mBluetoothSocket.connect();
                         conexion = true;
@@ -239,14 +279,16 @@ public class MainActivity extends AppCompatActivity {
                         btnConexion.setText("Desconectar");
                         btnAscensor1.setVisibility(View.VISIBLE);
                         btnAscensor2.setVisibility(View.VISIBLE);
-                        btnAscensor3.setVisibility(View.VISIBLE);
                         btnPuerta.setVisibility(View.VISIBLE);
                         btnPorton.setVisibility(View.VISIBLE);
                         tvAscensor.setVisibility(View.VISIBLE);
+                        textViewBtn.setVisibility(View.VISIBLE);
 
                     }catch (IOException error){
                         conexion = false;
                         Toast.makeText(getApplicationContext(),"Ha ocurrido un eroor: "+ error,Toast.LENGTH_SHORT).show();
+                        //Agregar audio de error
+
                     }
 
                 }else{
